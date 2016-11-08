@@ -80,7 +80,6 @@ Constraints
 -----------
 
 * Only maintained 3rd party libraries are used.
-* Uses PostgreSQL everywhere (9.2+)
 * Environment variables for configuration (This won't work with Apache/mod_wsgi).
 
 
@@ -112,36 +111,31 @@ Answer the prompts with your own desired options_. For example::
     Resolving deltas: 100% (283/283), done.
     project_name [Project Name]: Reddit Clone
     project_slug [reddit_clone]: reddit
-    author_name [Daniel Roy Greenfeld]: Daniel Greenfeld
+    author_name [sokunn]: Daniel Greenfeld
     email [you@example.com]: pydanny@gmail.com
     description [A short description of the project.]: A reddit clone.
     domain_name [example.com]: myreddit.com
-    version [0.1.0]: 0.0.1
-    timezone [UTC]: America/Los_Angeles
+    version [0.0.1]: 0.0.1
+    timezone [Asia/Seoul]: America/Los_Angeles
+    db_password [0000]: 1234
     use_whitenoise [y]: n
-    use_celery [n]: y
+    use_celery [y]: y
     use_mailhog [n]: n
     use_sentry_for_error_reporting [y]: y
     use_opbeat [n]: y
-    use_pycharm [n]: y
+    use_pycharm [y]: y
     windows [n]: n
     use_python3 [y]: y
-    use_docker [y]: n
-    use_heroku [n]: y
-    use_compressor [n]: y
-    Select postgresql_version:
-    1 - 9.5
-    2 - 9.4
-    3 - 9.3
-    4 - 9.2
-    Choose from 1, 2, 3, 4 [1]: 1
+    use_docker [n]: n
+    use_heroku [y]: y
+    use_compressor [y]: y
     Select js_task_runner:
     1 - Gulp
     2 - Grunt
     3 - Webpack
     4 - None
     Choose from 1, 2, 3, 4 [1]: 1
-    use_lets_encrypt [n]: n
+    use_lets_encrypt [y]: n
     Select open_source_license:
     1 - MIT
     2 - BSD

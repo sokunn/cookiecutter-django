@@ -12,7 +12,8 @@ from __future__ import absolute_import, unicode_literals
 
 import environ
 
-ROOT_DIR = environ.Path(__file__) - 3  # ({{ cookiecutter.project_slug }}/config/settings/common.py - 3 = {{ cookiecutter.project_slug }}/)
+ROOT_DIR = environ.Path(
+    __file__) - 3  # ({{ cookiecutter.project_slug }}/config/settings/common.py - 3 = {{ cookiecutter.project_slug }}/)
 APPS_DIR = ROOT_DIR.path('{{ cookiecutter.project_slug }}')
 
 env = environ.Env()
@@ -100,10 +101,10 @@ MANAGERS = ADMINS
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
-    'default': env.db('DATABASE_URL', default='postgres://{% if cookiecutter.windows == 'y' %}localhost{% endif %}/{{cookiecutter.project_slug}}'),
+    'default': env.db('DATABASE_URL',
+                      default='mysql://root:{{cookiecutter.db_password}}@127.0.0.1:3306/{{cookiecutter.project_slug}}'),
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
-
 
 # GENERAL CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -114,7 +115,7 @@ DATABASES['default']['ATOMIC_REQUESTS'] = True
 TIME_ZONE = '{{ cookiecutter.timezone }}'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#language-code
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = '{{ cookiecutter.language_code }}'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#site-id
 SITE_ID = 1
@@ -201,7 +202,6 @@ ROOT_URLCONF = 'config.urls'
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#wsgi-application
 WSGI_APPLICATION = 'config.wsgi.application'
 
-
 # PASSWORD VALIDATION
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-password-validators
 # ------------------------------------------------------------------------------
@@ -245,7 +245,7 @@ LOGIN_URL = 'account_login'
 
 # SLUGLIFIER
 AUTOSLUG_SLUGIFY_FUNCTION = 'slugify.slugify'
-{% if cookiecutter.use_celery == 'y' %}
+{ % if cookiecutter.use_celery == 'y' %}
 ########## CELERY
 INSTALLED_APPS += ('{{cookiecutter.project_slug}}.taskapp.celery.CeleryConfig',)
 # if you are not using the django database broker (e.g. rabbitmq, redis, memcached), you can remove the next line.
@@ -256,14 +256,14 @@ if BROKER_URL == 'django://':
 else:
     CELERY_RESULT_BACKEND = BROKER_URL
 ########## END CELERY
-{% endif %}
+{ % endif %}
 
-{%- if cookiecutter.use_compressor == 'y'-%}
+{ % - if cookiecutter.use_compressor == 'y' - %}
 # django-compressor
 # ------------------------------------------------------------------------------
-INSTALLED_APPS += ("compressor", )
-STATICFILES_FINDERS += ("compressor.finders.CompressorFinder", )
-{%- endif %}
+INSTALLED_APPS += ("compressor",)
+STATICFILES_FINDERS += ("compressor.finders.CompressorFinder",)
+{ % - endif %}
 
 # Location of root django.contrib.admin URL, use {% raw %}{% url 'admin:index' %}{% endraw %}
 ADMIN_URL = r'^admin/'

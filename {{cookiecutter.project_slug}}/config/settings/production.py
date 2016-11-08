@@ -16,9 +16,11 @@ from __future__ import absolute_import, unicode_literals
 
 from boto.s3.connection import OrdinaryCallingFormat
 from django.utils import six
-{% if cookiecutter.use_sentry_for_error_reporting == 'y' %}
+
+{ % if cookiecutter.use_sentry_for_error_reporting == 'y' %}
 import logging
-{% endif %}
+
+{ % endif %}
 
 from .common import *  # noqa
 
@@ -28,27 +30,26 @@ from .common import *  # noqa
 # Raises ImproperlyConfigured exception if DJANGO_SECRET_KEY not in os.environ
 SECRET_KEY = env('DJANGO_SECRET_KEY')
 
-
 # This ensures that Django will be able to detect a secure connection
 # properly on Heroku.
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-{%- if cookiecutter.use_sentry_for_error_reporting == 'y' %}
+{ % - if cookiecutter.use_sentry_for_error_reporting == 'y' %}
 # raven sentry client
 # See https://docs.getsentry.com/hosted/clients/python/integrations/django/
-INSTALLED_APPS += ('raven.contrib.django.raven_compat', )
-{% endif %}
-{%- if cookiecutter.use_whitenoise == 'y' %}
+INSTALLED_APPS += ('raven.contrib.django.raven_compat',)
+{ % endif %}
+{ % - if cookiecutter.use_whitenoise == 'y' %}
 # Use Whitenoise to serve static files
 # See: https://whitenoise.readthedocs.io/
-WHITENOISE_MIDDLEWARE = ('whitenoise.middleware.WhiteNoiseMiddleware', )
+WHITENOISE_MIDDLEWARE = ('whitenoise.middleware.WhiteNoiseMiddleware',)
 MIDDLEWARE = WHITENOISE_MIDDLEWARE + MIDDLEWARE
-{% endif %}
-{%- if cookiecutter.use_sentry_for_error_reporting == 'y' -%}
-RAVEN_MIDDLEWARE = ('raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware', )
+{ % endif %}
+{ % - if cookiecutter.use_sentry_for_error_reporting == 'y' - %}
+RAVEN_MIDDLEWARE = ('raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware',)
 MIDDLEWARE = RAVEN_MIDDLEWARE + MIDDLEWARE
-{% endif %}
-{%- if cookiecutter.use_opbeat == 'y' -%}
+{ % endif %}
+{ % - if cookiecutter.use_opbeat == 'y' - %}
 # opbeat integration
 # See https://opbeat.com/languages/django/
 INSTALLED_APPS += ('opbeat.contrib.django',)
@@ -58,9 +59,9 @@ OPBEAT = {
     'SECRET_TOKEN': env('DJANGO_OPBEAT_SECRET_TOKEN')
 }
 MIDDLEWARE = (
-    'opbeat.contrib.django.middleware.OpbeatAPMMiddleware',
-) + MIDDLEWARE
-{% endif %}
+                 'opbeat.contrib.django.middleware.OpbeatAPMMiddleware',
+             ) + MIDDLEWARE
+{ % endif %}
 
 # SECURITY CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -88,8 +89,7 @@ X_FRAME_OPTIONS = 'DENY'
 ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['{{cookiecutter.domain_name}}'])
 # END SITE CONFIGURATION
 
-INSTALLED_APPS += ('gunicorn', )
-
+INSTALLED_APPS += ('gunicorn',)
 
 # STORAGE CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -120,38 +120,39 @@ AWS_HEADERS = {
 
 # URL that handles the media served from MEDIA_ROOT, used for managing
 # stored files.
-{% if cookiecutter.use_whitenoise == 'y' -%}
+{ % if cookiecutter.use_whitenoise == 'y' - %}
 MEDIA_URL = 'https://s3.amazonaws.com/%s/' % AWS_STORAGE_BUCKET_NAME
-{% else %}
+{ % else %}
 #  See:http://stackoverflow.com/questions/10390244/
 from storages.backends.s3boto import S3BotoStorage
+
 StaticRootS3BotoStorage = lambda: S3BotoStorage(location='static')
 MediaRootS3BotoStorage = lambda: S3BotoStorage(location='media')
 DEFAULT_FILE_STORAGE = 'config.settings.production.MediaRootS3BotoStorage'
 
 MEDIA_URL = 'https://s3.amazonaws.com/%s/media/' % AWS_STORAGE_BUCKET_NAME
-{%- endif %}
+{ % - endif %}
 
 # Static Assets
 # ------------------------
-{% if cookiecutter.use_whitenoise == 'y' -%}
+{ % if cookiecutter.use_whitenoise == 'y' - %}
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-{% else %}
+{ % else %}
 STATIC_URL = 'https://s3.amazonaws.com/%s/static/' % AWS_STORAGE_BUCKET_NAME
 STATICFILES_STORAGE = 'config.settings.production.StaticRootS3BotoStorage'
 # See: https://github.com/antonagestam/collectfast
 # For Django 1.7+, 'collectfast' should come before
 # 'django.contrib.staticfiles'
 AWS_PRELOAD_METADATA = True
-INSTALLED_APPS = ('collectfast', ) + INSTALLED_APPS
-{%- endif %}
-{% if cookiecutter.use_compressor == 'y'-%}
+INSTALLED_APPS = ('collectfast',) + INSTALLED_APPS
+{ % - endif %}
+{ % if cookiecutter.use_compressor == 'y' - %}
 # COMPRESSOR
 # ------------------------------------------------------------------------------
 COMPRESS_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 COMPRESS_URL = STATIC_URL
 COMPRESS_ENABLED = env.bool('COMPRESS_ENABLED', default=True)
-{%- endif %}
+{ % - endif %}
 # EMAIL
 # ------------------------------------------------------------------------------
 DEFAULT_FROM_EMAIL = env('DJANGO_DEFAULT_FROM_EMAIL',
@@ -160,7 +161,7 @@ EMAIL_SUBJECT_PREFIX = env('DJANGO_EMAIL_SUBJECT_PREFIX', default='[{{cookiecutt
 SERVER_EMAIL = env('DJANGO_SERVER_EMAIL', default=DEFAULT_FROM_EMAIL)
 
 # Anymail with Mailgun
-INSTALLED_APPS += ("anymail", )
+INSTALLED_APPS += ("anymail",)
 ANYMAIL = {
     "MAILGUN_API_KEY": env('DJANGO_MAILGUN_API_KEY'),
     "MAILGUN_SENDER_DOMAIN": env('MAILGUN_SENDER_DOMAIN')
@@ -178,11 +179,11 @@ TEMPLATES[0]['OPTIONS']['loaders'] = [
 
 # DATABASE CONFIGURATION
 # ------------------------------------------------------------------------------
-{% if cookiecutter.use_elasticbeanstalk_experimental.lower() == 'y' -%}
+{ % if cookiecutter.use_elasticbeanstalk_experimental.lower() == 'y' - %}
 # Uses Amazon RDS for database hosting, which doesn't follow the Heroku-style spec
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': env('RDS_DB_NAME'),
         'USER': env('RDS_USERNAME'),
         'PASSWORD': env('RDS_PASSWORD'),
@@ -190,22 +191,22 @@ DATABASES = {
         'PORT': env('RDS_PORT'),
     }
 }
-{% else %}
+{ % else %}
 # Use the Heroku-style specification
 # Raises ImproperlyConfigured exception if DATABASE_URL not in os.environ
 DATABASES['default'] = env.db('DATABASE_URL')
-{%- endif %}
+{ % - endif %}
 
 # CACHING
 # ------------------------------------------------------------------------------
-{% if cookiecutter.use_elasticbeanstalk_experimental.lower() == 'y' -%}
+{ % if cookiecutter.use_elasticbeanstalk_experimental.lower() == 'y' - %}
 REDIS_LOCATION = "redis://{}:{}/0".format(
     env('REDIS_ENDPOINT_ADDRESS'),
     env('REDIS_PORT')
 )
-{% else %}
+{ % else %}
 REDIS_LOCATION = '{0}/{1}'.format(env('REDIS_URL', default='redis://127.0.0.1:6379'), 0)
-{%- endif %}
+{ % - endif %}
 # Heroku URL does not pass the DB number, so we parse it in
 CACHES = {
     'default': {
@@ -214,12 +215,12 @@ CACHES = {
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
             'IGNORE_EXCEPTIONS': True,  # mimics memcache behavior.
-                                        # http://niwinz.github.io/django-redis/latest/#_memcached_exceptions_behavior
+            # http://niwinz.github.io/django-redis/latest/#_memcached_exceptions_behavior
         }
     }
 }
 
-{% if cookiecutter.use_sentry_for_error_reporting == 'y' %}
+{ % if cookiecutter.use_sentry_for_error_reporting == 'y' %}
 # Sentry Configuration
 SENTRY_DSN = env('DJANGO_SENTRY_DSN')
 SENTRY_CLIENT = env('DJANGO_SENTRY_CLIENT', default='raven.contrib.django.raven_compat.DjangoClient')
@@ -275,7 +276,7 @@ RAVEN_CONFIG = {
     'CELERY_LOGLEVEL': env.int('DJANGO_SENTRY_LOG_LEVEL', logging.INFO),
     'DSN': SENTRY_DSN
 }
-{% elif cookiecutter.use_sentry_for_error_reporting == 'n' %}
+{ % elif cookiecutter.use_sentry_for_error_reporting == 'n' %}
 # LOGGING CONFIGURATION
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#logging
@@ -323,7 +324,7 @@ LOGGING = {
         }
     }
 }
-{% endif %}
+{ % endif %}
 # Custom Admin URL, use {% raw %}{% url 'admin:index' %}{% endraw %}
 ADMIN_URL = env('DJANGO_ADMIN_URL')
 

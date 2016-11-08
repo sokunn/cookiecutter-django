@@ -21,16 +21,19 @@ description [A short description of the project.]
 domain_name [example.com]
     Whatever domain name you plan to use for your project when it goes live.
 
-version [0.1.0]
+version [0.0.1]
     The starting version number for your project.
 
-timezone [UTC]
+timezone [Asia/Seoul]
     Used in the common settings file for the `TIME_ZONE` value.
+
+db_password [0000]
+    DB password.
 
 use_whitenoise [y]
     Whether to use WhiteNoise_ for static file serving.
 
-use_celery [n]
+use_celery [y]
     Whether to use Celery_. This gives you the ability to use distributed task
     queues in your project.
 
@@ -42,13 +45,13 @@ use_mailhog [n]
     executable for your operating system, see the 'Developing Locally' docs
     for instructions.
 
-use_sentry_for_error_reporting [n]
+use_sentry_for_error_reporting [y]
     Whether to use Sentry_ to log errors from your project.
 
 use_opbeat [n]
     Whether to use Opbeat_ for preformance monitoring and code optimization.
 
-use_pycharm [n]
+use_pycharm [y]
     Adds support for developing in PyCharm_ with a preconfigured .idea directory.
 
 windows [n]
@@ -58,14 +61,14 @@ use_python3 [y]
     By default, the Python code generated will be for Python 3.x. But if you
     answer `n` here, it will be legacy Python 2.7 code.
 
-use_docker [y]
+use_docker [n]
     Whether to use Docker_, separating the app and database into separate
     containers.
 
-use_heroku [n]
+use_heroku [y]
     Add configuration to deploy the application to a Heroku_ instance.
 
-use_compressor [n]
+use_compressor [y]
     Use `Django Compressor`_ to minify and combine rendered JavaScript and CSS
     into cachable static resources.
 
@@ -77,7 +80,7 @@ js_task_runner [1]
     3. Webpack_
     4. None
 
-use_lets_encrypt [n]
+use_lets_encrypt [y]
     Use `Let's Encrypt`_ as the certificate authority for this project.
 
 open_source_license [1]

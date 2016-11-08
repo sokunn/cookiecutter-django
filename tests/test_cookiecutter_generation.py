@@ -16,12 +16,12 @@ def context():
     return {
         'project_name': 'My Test Project',
         'project_slug': 'my_test_project',
-        'author_name': 'Test Author',
-        'email': 'test@example.com',
+        'author_name': 'sokunn',
+        'email': 'gsr2732@gmail.com',
         'description': 'A short description of the project.',
         'domain_name': 'example.com',
-        'version': '0.1.0',
-        'timezone': 'UTC',
+        'version': '0.0.1',
+        'timezone': 'Asia/Seoul',
     }
 
 
